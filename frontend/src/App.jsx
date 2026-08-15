@@ -209,6 +209,8 @@ function App() {
   // ==========================================================
 
   useEffect(() => {
+    document.title = "CineMatch - AI Movie & TV Show Recommendation Engine";
+
     async function loadMovies() {
       try {
         setLoadingMovies(true);
