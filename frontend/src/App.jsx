@@ -214,8 +214,23 @@ function App() {
         setLoadingMovies(true);
         setError("");
 
+        // 1. Instantly load full 860-item catalogue (all movies and TV shows like Modern Family)
+        const localResp = await fetch("/movie_tv_catalogue.json");
+        if (localResp.ok) {
+          const localData = await localResp.json();
+          if (Array.isArray(localData) && localData.length > 0) {
+            setMovies(localData);
+            setLoadingMovies(false);
+          }
+        }
+      } catch (localErr) {
+        console.warn("Local catalogue fetch error:", localErr);
+      }
+
+      // 2. Sync with live backend API if active
+      try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 4000);
+        const timeoutId = setTimeout(() => controller.abort(), 3500);
 
         const response = await fetch(`${API_URL}/api/movies`, {
           signal: controller.signal,
@@ -226,47 +241,10 @@ function App() {
           const data = await response.json();
           if (Array.isArray(data) && data.length > 0) {
             setMovies(data);
-            return;
           }
         }
       } catch (err) {
-        console.warn("Backend API unavailable, fetching live TMDB movies fallback:", err);
-      }
-
-      // Fallback: fetch live TMDB trending movies directly
-      try {
-        const tmdbResp = await fetch(
-          "https://api.themoviedb.org/3/trending/movie/week?api_key=d0e3f1843f2726ff6b1da8b6fd4eaa52"
-        );
-        if (tmdbResp.ok) {
-          const tmdbData = await tmdbResp.json();
-          if (tmdbData?.results && Array.isArray(tmdbData.results)) {
-            const formatted = tmdbData.results.map((m) => ({
-              id: m.id,
-              title: m.title || m.original_title,
-              media_type: m.media_type || "movie",
-              poster_path: m.poster_path,
-              backdrop_path: m.backdrop_path,
-              overview: m.overview,
-              genres: "Popular, Trending",
-              vote_average: m.vote_average,
-              release_date: m.release_date,
-            }));
-
-            // Merge with default fallback movies to avoid duplicates
-            const combined = [...formatted];
-            DEFAULT_FALLBACK_MOVIES.forEach((def) => {
-              if (!combined.some((c) => c.title?.toLowerCase() === def.title?.toLowerCase())) {
-                combined.push(def);
-              }
-            });
-
-            setMovies(combined);
-            return;
-          }
-        }
-      } catch (fallbackErr) {
-        console.error("TMDB fallback error:", fallbackErr);
+        console.warn("Backend API sync skipped, using local dataset:", err);
       } finally {
         setLoadingMovies(false);
       }
