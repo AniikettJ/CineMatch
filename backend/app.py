@@ -1,9 +1,17 @@
 import os
+import requests
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 from recommender import recommend, catalogue_df
 
+TMDB_API_KEY = os.environ.get("TMDB_API_KEY", "d0e3f1843f2726ff6b1da8b6fd4eaa52")
 
 app = Flask(__name__)
 
@@ -22,7 +30,9 @@ def index():
         "endpoints": {
             "health": "/api/health",
             "movies": "/api/movies",
-            "recommend": "/api/recommend"
+            "recommend": "/api/recommend",
+            "tmdb_trending": "/api/tmdb/trending",
+            "tmdb_search": "/api/tmdb/search?query=spiderman"
         }
     })
 
@@ -257,6 +267,39 @@ def get_recommendations():
             recommendations
 
     })
+
+
+# ============================================================
+# LIVE TMDB API ENDPOINTS
+# ============================================================
+
+@app.route("/api/tmdb/trending", methods=["GET"])
+def tmdb_trending():
+    """Fetch live trending movies/shows from TMDB."""
+    try:
+        url = f"https://api.themoviedb.org/3/trending/movie/day?api_key={TMDB_API_KEY}"
+        resp = requests.get(url, timeout=5)
+        if resp.status_code == 200:
+            return jsonify(resp.json())
+        return jsonify({"error": "Failed to fetch from TMDB", "status_code": resp.status_code}), resp.status_code
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/tmdb/search", methods=["GET"])
+def tmdb_search():
+    """Live search TMDB API."""
+    query = request.args.get("query", "")
+    if not query:
+        return jsonify({"error": "Query parameter is required"}), 400
+    try:
+        url = f"https://api.themoviedb.org/3/search/multi?api_key={TMDB_API_KEY}&query={query}"
+        resp = requests.get(url, timeout=5)
+        if resp.status_code == 200:
+            return jsonify(resp.json())
+        return jsonify({"error": "Failed to fetch search from TMDB"}), resp.status_code
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 # ============================================================
