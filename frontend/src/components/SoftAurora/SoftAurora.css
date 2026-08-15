@@ -1,0 +1,17 @@
+.soft-aurora-container {
+    width: 100%;
+    height: 100%;
+}
+
+.soft-aurora-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.soft-aurora-container canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}

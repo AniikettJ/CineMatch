@@ -1,0 +1,87 @@
+.target-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 34px;
+    height: 34px;
+
+    transform: translate(-50%, -50%);
+
+    pointer-events: none;
+    z-index: 999999;
+
+    will-change: transform;
+
+    color: var(--cursor-color);
+}
+
+.target-corner {
+    position: absolute;
+
+    width: 9px;
+    height: 9px;
+
+    border-color: var(--cursor-color);
+    border-style: solid;
+
+    transition: border-color 0.2s ease;
+}
+
+.top-left {
+    top: 0;
+    left: 0;
+    border-width: 2px 0 0 2px;
+}
+
+.top-right {
+    top: 0;
+    right: 0;
+    border-width: 2px 2px 0 0;
+}
+
+.bottom-left {
+    bottom: 0;
+    left: 0;
+    border-width: 0 0 2px 2px;
+}
+
+.bottom-right {
+    bottom: 0;
+    right: 0;
+    border-width: 0 2px 2px 0;
+}
+
+.target-dot {
+    position: absolute;
+
+    width: 4px;
+    height: 4px;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    background: var(--cursor-color);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--cursor-color);
+}
+
+.cursor-target {
+    cursor: none !important;
+}
+
+@media (max-width: 768px) {
+    .target-cursor {
+        display: none;
+    }
+
+    body {
+        cursor: auto !important;
+    }
+
+    .cursor-target {
+        cursor: pointer !important;
+    }
+}

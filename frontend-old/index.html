@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        CineMatch | Movie Recommendation
+    </title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+
+<body>
+
+
+    <!-- ========================================================
+     NAVBAR
+========================================================= -->
+
+    <header class="navbar">
+
+        <div class="nav-container">
+
+            <a href="#" class="logo">
+
+                🎬
+                <span>
+                    Cine
+                </span><b>
+                    Match
+                </b>
+
+            </a>
+
+
+            <nav>
+
+                <a href="#">
+                    Home
+                </a>
+
+                <a href="#movie-selector">
+                    Movies
+                </a>
+
+                <a href="#how-it-works">
+                    How It Works
+                </a>
+
+            </nav>
+
+
+            <button class="search-icon" onclick="
+                document
+                .getElementById('movieSearch')
+                .focus()
+            ">
+
+                🔍
+
+            </button>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- ========================================================
+     HERO
+========================================================= -->
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <div class="eyebrow">
+                AI POWERED MOVIE DISCOVERY
+            </div>
+
+
+            <h1>
+
+                Find your next
+                <span>
+                    favorite story.
+                </span>
+
+            </h1>
+
+
+            <p>
+
+                Tell us what you enjoy watching
+                and CineMatch will discover
+                movies and TV shows tailored
+                to your taste.
+
+            </p>
+
+
+            <a href="#movie-selector" class="primary-button">
+
+                🎯
+                Find My Movies
+
+            </a>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ========================================================
+     SELECTOR
+========================================================= -->
+
+    <section class="selector-section" id="movie-selector">
+
+        <div class="container">
+
+            <div class="section-label">
+                PERSONALIZE YOUR EXPERIENCE
+            </div>
+
+
+            <h2>
+                What do you like watching?
+            </h2>
+
+
+            <p class="section-description">
+
+                Select at least one movie or
+                TV show you enjoy.
+
+            </p>
+
+
+
+            <!-- SEARCH -->
+
+            <div class="search-box">
+
+                <input id="movieSearch" type="text" placeholder="Search movies and TV shows..." autocomplete="off">
+
+                <span>
+                    🔍
+                </span>
+
+            </div>
+
+
+
+            <!-- SEARCH RESULTS -->
+
+            <div id="searchResults" class="search-results"></div>
+
+
+
+            <!-- SELECTED -->
+
+            <div class="selection-header">
+
+                <strong>
+                    Your selections
+                </strong>
+
+
+                <button id="clearAll" class="clear-button">
+
+                    Clear all
+
+                </button>
+
+            </div>
+
+
+            <div id="selectedMovies" class="selected-movies">
+
+                <div class="empty-selection">
+
+                    No movies selected yet.
+
+                </div>
+
+            </div>
+
+
+
+            <!-- SLIDER -->
+
+            <div class="slider-section">
+
+                <div class="slider-header">
+
+                    <strong>
+                        Number of recommendations
+                    </strong>
+
+                    <strong id="recommendationCount">
+                        10
+                    </strong>
+
+                </div>
+
+
+                <input id="recommendationSlider" type="range" min="5" max="20" value="10">
+
+
+                <div class="slider-labels">
+
+                    <span>
+                        5
+                    </span>
+
+                    <span>
+                        20
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- BUTTON -->
+
+            <button id="recommendButton" class="primary-button recommend-button">
+
+                🎯
+                Recommend Movies
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ========================================================
+     RECOMMENDATIONS
+========================================================= -->
+
+    <section class="recommendations-section">
+
+        <div class="container">
+
+            <div class="section-label">
+                PERSONALIZED FOR YOU
+            </div>
+
+
+            <h2>
+                Recommended For You
+            </h2>
+
+
+            <div id="recommendations" class="movie-grid">
+
+                <div class="empty-results">
+
+                    <h3>
+                        Your recommendations
+                    </h3>
+
+                    <p>
+                        Select movies above
+                        to discover something new.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ========================================================
+     HOW IT WORKS
+========================================================= -->
+
+    <section class="how-section" id="how-it-works">
+
+        <div class="container">
+
+            <div class="section-label">
+                HOW IT WORKS
+            </div>
+
+
+            <h2>
+                Recommendations with intelligence.
+            </h2>
+
+
+            <div class="steps">
+
+                <div class="step">
+
+                    <span>
+                        01
+                    </span>
+
+                    <h3>
+                        Tell us what you like
+                    </h3>
+
+                    <p>
+                        Select movies or TV shows
+                        you already enjoy.
+                    </p>
+
+                </div>
+
+
+                <div class="step">
+
+                    <span>
+                        02
+                    </span>
+
+                    <h3>
+                        We understand your taste
+                    </h3>
+
+                    <p>
+                        CineMatch combines
+                        semantic similarity,
+                        TF-IDF and ratings.
+                    </p>
+
+                </div>
+
+
+                <div class="step">
+
+                    <span>
+                        03
+                    </span>
+
+                    <h3>
+                        Discover something new
+                    </h3>
+
+                    <p>
+                        Get personalized movies
+                        and TV shows ranked for you.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ========================================================
+     MOVIE MODAL
+========================================================= -->
+
+    <div id="movieModal" class="movie-modal-container"></div>
+
+
+
+    <!-- ========================================================
+     TOAST
+========================================================= -->
+
+    <div id="toast"></div>
+
+
+
+    <script src="js/app.js"></script>
+
+
+</body>
+
+</html>
