@@ -14,6 +14,19 @@ CORS(app)
 # HEALTH CHECK
 # ============================================================
 
+@app.route("/", methods=["GET"])
+def index():
+    return jsonify({
+        "status": "success",
+        "message": "CineMatch API is live",
+        "endpoints": {
+            "health": "/api/health",
+            "movies": "/api/movies",
+            "recommend": "/api/recommend"
+        }
+    })
+
+
 @app.route("/api/health", methods=["GET"])
 def health():
 

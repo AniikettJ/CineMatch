@@ -24,7 +24,7 @@ const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:5000";
 
 function poster(path) {
   if (!path) {
-    return "https://via.placeholder.com/500x750/151821/ffffff?text=No+Poster";
+    return "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='750' viewBox='0 0 500 750'%3E%3Crect width='500' height='750' fill='%23151821'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='24' fill='%23666666'%3ENo Poster%3C/text%3E%3C/svg%3E";
   }
 
   if (path.startsWith("http")) {
