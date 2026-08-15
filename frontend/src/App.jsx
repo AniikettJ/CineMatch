@@ -485,6 +485,33 @@ function App() {
     }, 120);
   }
 
+  function getLocalRelated(targetMovie, moviesList, count = 6) {
+    if (!targetMovie || !moviesList?.length) return [];
+    const targetTitle = targetMovie.title?.toLowerCase();
+    const targetGenres = new Set(getGenres(targetMovie).map((g) => g.toLowerCase()));
+
+    return moviesList
+      .filter((m) => m.title?.toLowerCase() !== targetTitle)
+      .map((m) => {
+        const mGenres = getGenres(m).map((g) => g.toLowerCase());
+        let overlap = 0;
+        mGenres.forEach((g) => {
+          if (targetGenres.has(g)) overlap += 1;
+        });
+
+        const sameMediaTypeBonus = (m.media_type === targetMovie.media_type) ? 2 : 0;
+        const score = (overlap * 20) + ((m.vote_average || 7) * 4) + sameMediaTypeBonus;
+        const final_score = Math.round(Math.min(97.9, 55 + score) * 10) / 10;
+
+        return {
+          ...m,
+          final_score,
+        };
+      })
+      .sort((a, b) => b.final_score - a.final_score)
+      .slice(0, count);
+  }
+
   // ==========================================================
   // OPEN MOVIE DETAILS
   // ==========================================================
@@ -492,14 +519,17 @@ function App() {
   async function openMovie(movie) {
     if (!movie?.title) return;
 
-    // Open the popup FIRST. Related movies stay inside the popup
-    // until the user explicitly clicks "More Like This".
+    // Open the popup FIRST. Instantly load local related movies
     setSelectedMovie(movie);
-    setRelatedMovies([]);
+    const initialRelated = getLocalRelated(movie, movies, 6);
+    setRelatedMovies(initialRelated);
     setError("");
 
     try {
       setLoadingRecommendations(true);
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 4000);
 
       const response = await fetch(
         `${API_URL}/api/recommend`,
@@ -512,37 +542,29 @@ function App() {
             liked_movies: [movie.title],
             top_n: topN,
           }),
+          signal: controller.signal,
         }
       );
+      clearTimeout(timeoutId);
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          data.error || "Failed to find related movies."
-        );
-      }
-
-      const related =
-        Array.isArray(data.recommendations)
+      if (response.ok) {
+        const data = await response.json();
+        const related = Array.isArray(data.recommendations)
           ? data.recommendations
           : [];
 
-      const filteredMovies = related.filter(
-        (item) =>
-          item.title?.toLowerCase() !==
-          movie.title?.toLowerCase()
-      );
+        const filteredMovies = related.filter(
+          (item) =>
+            item.title?.toLowerCase() !==
+            movie.title?.toLowerCase()
+        );
 
-      setRelatedMovies(filteredMovies);
+        if (filteredMovies.length > 0) {
+          setRelatedMovies(filteredMovies);
+        }
+      }
     } catch (err) {
-      console.error("Related movies error:", err);
-
-      setRelatedMovies([]);
-      setError(
-        err.message ||
-        "Unable to find related movies."
-      );
+      console.warn("Backend related movies API unreachable, using local related matches:", err);
     } finally {
       setLoadingRecommendations(false);
     }
